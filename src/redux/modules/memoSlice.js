@@ -83,53 +83,27 @@ const memosSlice = createSlice({
     builder
       // 메모 가져오기
 
-      //대기중
-      .addCase(__getMemo.pending, (state) => {
-        state.loading = true;
-      })
       //addCase 외에 사용 할 수있는게 더 있다. 공문 참고하자
-
-      // 요청 성공
       .addCase(__getMemo.fulfilled, (state, action) => {
         state.loading = false;
         state.text = action.payload;
       })
-      // 요청 실패
-      .addCase(__getMemo.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
-      })
 
       // 메모 추가하기
-      .addCase(__addMemo.pending, (state) => {
-        state.loading = true;
-      })
       .addCase(__addMemo.fulfilled, (state, action) => {
         state.loading = false;
         state.text = [action.payload, ...state.text];
       })
-      .addCase(__addMemo.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
-      })
+
       //메모 삭제하기
-      .addCase(__deleteMemo.pending, (state) => {
-        state.loading = true;
-      })
       .addCase(__deleteMemo.fulfilled, (state, action) => {
         state.loading = false;
         state.text = state.text.filter((v, l) =>
           l === action.payload ? false : true
         );
       })
-      .addCase(__deleteMemo.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
-      })
+
       // 메모 수정하기
-      .addCase(__changeMemo.pending, (state) => {
-        state.loading = true;
-      })
       .addCase(__changeMemo.fulfilled, (state, action) => {
         state.loading = false;
         state.text = state.text.map((v, l) => {
@@ -141,9 +115,16 @@ const memosSlice = createSlice({
           }
         });
       })
-      .addCase(__changeMemo.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
+
+      //요청시, 실패시
+      .addDefaultCase((state, action) => {
+        if (action.meta?.requestStatus === "pending") {
+          state.loading = true;
+        }
+        if (action.meta?.requestStatus === "rejected") {
+          state.loading = false;
+          state.error = action.error.message;
+        }
       });
   },
 });
