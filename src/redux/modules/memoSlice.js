@@ -80,70 +80,71 @@ const memosSlice = createSlice({
 
   // toolkit 장점 통신 상태를 자동으로 받아와 try ~ catch를 사용할 필요가 없다.
   extraReducers: (builder) => {
-    // 메모 가져오기
+    builder
+      // 메모 가져오기
 
-    //대기중
-    builder.addCase(__getMemo.pending, (state) => {
-      state.loading = true;
-    });
-    //addCase 외에 사용 할 수있는게 더 있다. 공문 참고하자
+      //대기중
+      .addCase(__getMemo.pending, (state) => {
+        state.loading = true;
+      })
+      //addCase 외에 사용 할 수있는게 더 있다. 공문 참고하자
 
-    // 요청 성공
-    builder.addCase(__getMemo.fulfilled, (state, action) => {
-      state.loading = false;
-      state.text = action.payload;
-    });
-    // 요청 실패
-    builder.addCase(__getMemo.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.error.message;
-    });
+      // 요청 성공
+      .addCase(__getMemo.fulfilled, (state, action) => {
+        state.loading = false;
+        state.text = action.payload;
+      })
+      // 요청 실패
+      .addCase(__getMemo.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
 
-    // 메모 추가하기
-    builder.addCase(__addMemo.pending, (state) => {
-      state.loading = true;
-    });
-    builder.addCase(__addMemo.fulfilled, (state, action) => {
-      state.loading = false;
-      state.text = [action.payload, ...state.text];
-    });
-    builder.addCase(__addMemo.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.error.message;
-    });
-    //메모 삭제하기
-    builder.addCase(__deleteMemo.pending, (state) => {
-      state.loading = true;
-    });
-    builder.addCase(__deleteMemo.fulfilled, (state, action) => {
-      state.loading = false;
-      state.text = state.text.filter((v, l) =>
-        l === action.payload ? false : true
-      );
-    });
-    builder.addCase(__deleteMemo.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.error.message;
-    });
-    // 메모 수정하기
-    builder.addCase(__changeMemo.pending, (state) => {
-      state.loading = true;
-    });
-    builder.addCase(__changeMemo.fulfilled, (state, action) => {
-      state.loading = false;
-      state.text = state.text.map((v, l) => {
-        if (l === action.payload.index) {
-          v.text = action.payload.text;
-          return v;
-        } else {
-          return v;
-        }
+      // 메모 추가하기
+      .addCase(__addMemo.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(__addMemo.fulfilled, (state, action) => {
+        state.loading = false;
+        state.text = [action.payload, ...state.text];
+      })
+      .addCase(__addMemo.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      //메모 삭제하기
+      .addCase(__deleteMemo.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(__deleteMemo.fulfilled, (state, action) => {
+        state.loading = false;
+        state.text = state.text.filter((v, l) =>
+          l === action.payload ? false : true
+        );
+      })
+      .addCase(__deleteMemo.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      // 메모 수정하기
+      .addCase(__changeMemo.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(__changeMemo.fulfilled, (state, action) => {
+        state.loading = false;
+        state.text = state.text.map((v, l) => {
+          if (l === action.payload.index) {
+            v.text = action.payload.text;
+            return v;
+          } else {
+            return v;
+          }
+        });
+      })
+      .addCase(__changeMemo.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
       });
-    });
-    builder.addCase(__changeMemo.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.error.message;
-    });
   },
 });
 
